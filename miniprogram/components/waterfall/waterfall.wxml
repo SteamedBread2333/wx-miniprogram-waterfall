@@ -1,5 +1,7 @@
 <!-- 引入默认的 waterfall-item 模板 -->
 <import src="../../templates/waterfall/default-item.wxml" />
+<!-- 引入页面自定义模板 -->
+<import src="../../templates/waterfall/index-item.wxml" />
 
 <view class="waterfall-container">
   <view class="waterfall-column waterfall-left">
