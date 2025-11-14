@@ -2,7 +2,7 @@
 
 A flexible and performant waterfall layout component for WeChat Mini Programs, featuring automatic item distribution, dynamic height calculation, and customizable item rendering.
 
-![Waterfall Demo](./demo.gif)
+https://github.com/user-attachments/assets/1d153a52-b506-4e28-a2ac-01c6c5256a1e
 
 ## Features
 
