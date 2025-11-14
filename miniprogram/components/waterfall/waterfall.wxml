@@ -1,7 +1,17 @@
 <!-- 引入默认的 waterfall-item 模板 -->
 <import src="../../templates/waterfall/default-item.wxml" />
-<!-- 引入页面自定义模板 -->
-<import src="../../templates/waterfall/index-item.wxml" />
+
+<!-- 定义 waterfallItem 模板（用于页面自定义） -->
+<template name="waterfallItem">
+  <waterfall-item 
+    item="{{item}}" 
+    item-id="{{item._imageKey}}"
+    loaded="{{loadedImages[item._imageKey] || false}}" 
+    bind:imageload="onImageLoad" 
+    bind:itemtap="onItemTap"
+    bind:heightmeasured="onItemHeightMeasured"
+  />
+</template>
 
 <view class="waterfall-container">
   <view class="waterfall-column waterfall-left">
