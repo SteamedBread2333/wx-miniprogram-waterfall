@@ -1,0 +1,27 @@
+<view 
+  id="waterfall-item-{{itemId}}"
+  class="waterfall-item {{customClass}}" 
+  bindtap="onItemTap"
+>
+  <!-- 图片区域 -->
+  <view class="waterfall-image-wrapper">
+    <slot name="image"></slot>
+    <image 
+      class="waterfall-image {{imageLoaded ? 'loaded' : ''}}" 
+      src="{{item.image}}" 
+      mode="widthFix"
+      lazy-load="{{true}}"
+      bindload="onImageLoad"
+    />
+  </view>
+  
+  <!-- 内容区域 -->
+  <view class="waterfall-content" wx:if="{{showDefaultContent && item.title}}">
+    <slot name="content"></slot>
+    <text class="waterfall-title">{{item.title}}</text>
+  </view>
+  
+  <!-- 自定义插槽 -->
+  <slot></slot>
+</view>
+

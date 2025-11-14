@@ -1,0 +1,12 @@
+<!-- 自定义 waterfall-item 模板（在 index 页面中使用） -->
+<template name="waterfallItem">
+  <waterfall-item 
+    item="{{item}}" 
+    item-id="{{item._imageKey}}"
+    loaded="{{loadedImages[item._imageKey] || false}}" 
+    bind:imageload="onImageLoad" 
+    bind:itemtap="onItemTap"
+    bind:heightmeasured="onItemHeightMeasured"
+  />
+</template>
+

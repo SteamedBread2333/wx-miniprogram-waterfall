@@ -1,0 +1,19 @@
+<!-- 引入默认的 waterfall-item 模板 -->
+<import src="../../templates/waterfall/default-item.wxml" />
+<!-- 引入页面自定义模板（如果存在） -->
+<import src="../../templates/waterfall/index-item.wxml" />
+
+<view class="waterfall-container">
+  <view class="waterfall-column waterfall-left">
+    <block wx:for="{{leftList}}" wx:key="index" wx:for-item="item" wx:for-index="idx">
+      <template is="{{itemTemplate || 'defaultItem'}}" data="{{item: item, index: idx, column: 'left', loadedImages: loadedImages}}" />
+    </block>
+  </view>
+  
+  <view class="waterfall-column waterfall-right">
+    <block wx:for="{{rightList}}" wx:key="index" wx:for-item="item" wx:for-index="idx">
+      <template is="{{itemTemplate || 'defaultItem'}}" data="{{item: item, index: idx, column: 'right', loadedImages: loadedImages}}" />
+    </block>
+  </view>
+</view>
+

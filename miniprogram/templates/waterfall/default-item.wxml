@@ -1,0 +1,12 @@
+<!-- waterfall-item 模板 -->
+<template name="defaultItem">
+  <waterfall-item
+    item="{{item}}"
+    item-id="{{item._imageKey}}"
+    loaded="{{loadedImages[item._imageKey]}}"
+    bind:imageload="onImageLoad"
+    bind:itemtap="onItemTap"
+    bind:heightmeasured="onItemHeightMeasured"
+  />
+</template>
+

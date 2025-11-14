@@ -1,0 +1,10 @@
+{
+  "component": true,
+  "usingComponents": {
+    "waterfall-item": "/components/waterfall-item/waterfall-item"
+  },
+  "options": {
+    "multipleSlots": true
+  }
+}
+

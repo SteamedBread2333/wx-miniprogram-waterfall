@@ -1,0 +1,12 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 使用 waterfall 组件，传入自定义模板名称 -->
+  <!-- 模板定义在 pages/index/waterfall-item-template.wxml 中 -->
+  <waterfall 
+    list="{{waterfallList}}" 
+    column-gap="{{20}}"
+    row-gap="{{20}}"
+    item-template="waterfallItem"
+    bind:itemtap="onWaterfallItemTap"
+  ></waterfall>
+</view>

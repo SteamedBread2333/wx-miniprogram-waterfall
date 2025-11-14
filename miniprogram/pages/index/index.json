@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "瀑布流展示",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "waterfall": "/components/waterfall/waterfall",
+    "waterfall-item": "/components/waterfall-item/waterfall-item"
+  }
+}
