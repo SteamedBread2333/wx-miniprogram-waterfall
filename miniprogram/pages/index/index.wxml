@@ -1,12 +1,31 @@
+<!-- 引入自定义模板 -->
+<import src="../../templates/waterfall/index-item.wxml" />
+
 <!--index.wxml-->
 <view class="container">
-  <!-- 使用 waterfall 组件，传入自定义模板名称 -->
-  <!-- 模板定义在 pages/index/waterfall-item-template.wxml 中 -->
-  <waterfall 
-    list="{{waterfallList}}" 
-    column-gap="{{20}}"
-    row-gap="{{20}}"
-    item-template="waterfallItem"
-    bind:itemtap="onWaterfallItemTap"
-  ></waterfall>
+  <!-- 示例1: 使用抽象节点（slot 方式） -->
+  <view class="example-section">
+    <text class="example-title">示例1: 使用抽象节点（slot 方式）</text>
+    <waterfall 
+      list="{{waterfallList}}" 
+      column-gap="{{20}}"
+      row-gap="{{20}}"
+      use-slot="{{true}}"
+      bind:itemtap="onWaterfallItemTap"
+    >
+      <waterfall-item slot="waterfall-item-generic" />
+    </waterfall>
+  </view>
+
+  <!-- 示例2: 使用 itemTemplate（模板方式） -->
+  <view class="example-section">
+    <text class="example-title">示例2: 使用 itemTemplate（模板方式）</text>
+    <waterfall 
+      list="{{waterfallList}}" 
+      column-gap="{{20}}"
+      row-gap="{{20}}"
+      item-template="waterfallItem"
+      bind:itemtap="onWaterfallItemTap"
+    />
+  </view>
 </view>

@@ -1,18 +1,42 @@
 <!-- 引入默认的 waterfall-item 模板 -->
 <import src="../../templates/waterfall/default-item.wxml" />
-<!-- 引入页面自定义模板（如果存在） -->
-<import src="../../templates/waterfall/index-item.wxml" />
 
 <view class="waterfall-container">
   <view class="waterfall-column waterfall-left">
     <block wx:for="{{leftList}}" wx:key="index" wx:for-item="item" wx:for-index="idx">
-      <template is="{{itemTemplate || 'defaultItem'}}" data="{{item: item, index: idx, column: 'left', loadedImages: loadedImages}}" />
+      <!-- 如果使用 slot（通过抽象节点），使用抽象节点；否则使用模板 -->
+      <block wx:if="{{useSlot}}">
+        <waterfall-item-generic 
+          item="{{item}}" 
+          item-id="{{item._imageKey}}"
+          loaded="{{loadedImages[item._imageKey] || false}}" 
+          bind:imageload="onImageLoad" 
+          bind:itemtap="onItemTap"
+          bind:heightmeasured="onItemHeightMeasured"
+        />
+      </block>
+      <block wx:else>
+        <template is="{{itemTemplate || 'defaultItem'}}" data="{{item: item, index: idx, column: 'left', loadedImages: loadedImages}}" />
+      </block>
     </block>
   </view>
   
   <view class="waterfall-column waterfall-right">
     <block wx:for="{{rightList}}" wx:key="index" wx:for-item="item" wx:for-index="idx">
-      <template is="{{itemTemplate || 'defaultItem'}}" data="{{item: item, index: idx, column: 'right', loadedImages: loadedImages}}" />
+      <!-- 如果使用 slot（通过抽象节点），使用抽象节点；否则使用模板 -->
+      <block wx:if="{{useSlot}}">
+        <waterfall-item-generic 
+          item="{{item}}" 
+          item-id="{{item._imageKey}}"
+          loaded="{{loadedImages[item._imageKey] || false}}" 
+          bind:imageload="onImageLoad" 
+          bind:itemtap="onItemTap"
+          bind:heightmeasured="onItemHeightMeasured"
+        />
+      </block>
+      <block wx:else>
+        <template is="{{itemTemplate || 'defaultItem'}}" data="{{item: item, index: idx, column: 'right', loadedImages: loadedImages}}" />
+      </block>
     </block>
   </view>
 </view>

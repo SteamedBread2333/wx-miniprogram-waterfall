@@ -142,6 +142,17 @@ Page({
       icon: 'none'
     })
   },
-  // 注意：onWaterfallImageLoad 和 onWaterfallItemHeightMeasured 方法已移除
-  // 这些事件现在由 waterfall 组件内部处理，如果需要自定义处理，可以通过 waterfall 组件的事件来监听
+  // 瀑布流 item 相关事件（当使用抽象节点时，这些事件会从 waterfall-item 传递过来）
+  onImageLoad(e: any) {
+    // 图片加载事件，由 waterfall 组件内部处理
+    console.log('图片加载完成:', e.detail)
+  },
+  onItemTap(e: any) {
+    // Item 点击事件，由 waterfall 组件内部处理
+    console.log('Item 点击:', e.detail)
+  },
+  onItemHeightMeasured(e: any) {
+    // Item 高度测量事件，由 waterfall 组件内部处理
+    console.log('Item 高度已测量:', e.detail)
+  }
 })

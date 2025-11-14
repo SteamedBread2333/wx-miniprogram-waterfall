@@ -26,6 +26,11 @@ Component({
     itemTemplate: {
       type: String,
       value: ''
+    },
+    // 是否使用 slot（如果为 true，则使用 slot 内容，否则使用模板）
+    useSlot: {
+      type: Boolean,
+      value: false
     }
   },
 

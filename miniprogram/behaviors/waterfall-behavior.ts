@@ -90,12 +90,14 @@ export const waterfallBehavior = Behavior({
 
         // 根据当前列高度决定放入哪一列
         // 注意：这里加上的是 item 容器高度 + rowGap（行间距）
+        // rowGap 是组件的 property，需要通过 this.properties 访问
+        const rowGap = (this.properties as any).rowGap || 20
         if (leftHeight <= rightHeight) {
           leftList.push(itemWithHeight)
-          leftHeight += estimatedHeight + this.data.rowGap
+          leftHeight += estimatedHeight + rowGap
         } else {
           rightList.push(itemWithHeight)
-          rightHeight += estimatedHeight + this.data.rowGap
+          rightHeight += estimatedHeight + rowGap
         }
       })
 
@@ -157,12 +159,14 @@ export const waterfallBehavior = Behavior({
         }
 
         // 根据当前列高度决定放入哪一列
+        // rowGap 是组件的 property，需要通过 this.properties 访问
+        const rowGap = (this.properties as any).rowGap || 20
         if (leftHeight <= rightHeight) {
           leftList.push(itemWithHeight)
-          leftHeight += actualHeight + this.data.rowGap
+          leftHeight += actualHeight + rowGap
         } else {
           rightList.push(itemWithHeight)
-          rightHeight += actualHeight + this.data.rowGap
+          rightHeight += actualHeight + rowGap
         }
       })
 

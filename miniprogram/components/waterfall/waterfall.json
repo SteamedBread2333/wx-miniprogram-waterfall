@@ -3,6 +3,11 @@
   "usingComponents": {
     "waterfall-item": "/components/waterfall-item/waterfall-item"
   },
+  "componentGenerics": {
+    "waterfall-item-generic": {
+      "default": "/components/waterfall-item/waterfall-item"
+    }
+  },
   "options": {
     "multipleSlots": true
   }
