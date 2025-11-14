@@ -15,7 +15,8 @@ export const waterfallBehavior = Behavior({
     rightHeight: 0,
     loadedImages: {} as Record<string, boolean>, // 记录已加载的图片
     itemHeights: {} as Record<string, number>, // 记录每个 item 的实际渲染高度
-    isMeasuring: false // 是否正在测量高度
+    isMeasuring: false, // 是否正在测量高度
+    redistributeTimer: null as any // 防抖定时器
   },
 
   /**
@@ -105,9 +106,11 @@ export const waterfallBehavior = Behavior({
         leftList,
         rightList,
         leftHeight,
-        rightHeight
+        rightHeight,
+        isMeasuring: true // 标记开始测量阶段
       })
       // 注意：不再主动调用 measureItemHeights，改为由 waterfall-item 组件自动测量并上报高度
+      // redistributeItems 会在所有高度测量完成后自动调用
     },
 
     /**
@@ -119,28 +122,72 @@ export const waterfallBehavior = Behavior({
         return
       }
 
-      // 只更新高度记录，不重新分配布局，避免页面闪烁
-      // 初始分配已经基于图片高度，基本合理，重新分配会导致布局跳动
+      // 更新高度记录
       const itemHeights = { ...this.data.itemHeights }
       itemHeights[itemId] = height
 
       this.setData({
         itemHeights
       })
+
+      // 检查是否所有 item 都已测量完成
+      const allItems = [...this.data.leftList, ...this.data.rightList]
+      const measuredCount = Object.keys(itemHeights).length
+      const totalCount = allItems.length
+
+      // 如果所有 item 都已测量完成，使用防抖延迟重新分配
+      if (totalCount > 0 && measuredCount >= totalCount) {
+        // 清除之前的定时器
+        if (this.data.redistributeTimer) {
+          clearTimeout(this.data.redistributeTimer)
+        }
+
+        // 使用防抖，等待所有高度测量稳定后再重新分配
+        const timer = setTimeout(() => {
+          wx.nextTick(() => {
+            this.redistributeItems()
+          })
+        }, 100) // 100ms 防抖延迟
+
+        this.setData({
+          redistributeTimer: timer
+        })
+      }
     },
 
     /**
-     * 根据实际测量的高度重新分配布局（可选方法，当前不使用以避免闪烁）
+     * 根据实际测量的高度重新分配布局
+     * 只在所有 item 高度都测量完成后调用，避免页面闪烁
      */
     redistributeItems() {
       const allItems = [...this.data.leftList, ...this.data.rightList]
       const itemHeights = this.data.itemHeights
 
-      // 如果还有未测量的 item，等待
-      if (allItems.length > 0 && Object.keys(itemHeights).length < allItems.length) {
+      // 如果还有未测量的 item，不进行重新分配
+      if (allItems.length === 0 || Object.keys(itemHeights).length < allItems.length) {
         return
       }
 
+      // 检查是否有高度差异，如果差异很小则不需要重新分配
+      const rowGap = (this.properties as any).rowGap || 20
+      
+      // 计算当前布局的总高度
+      let currentLeftHeight = 0
+      let currentRightHeight = 0
+      
+      this.data.leftList.forEach((item: any) => {
+        const imageKey = item._imageKey || `${item.id}`
+        const height = itemHeights[imageKey] || item._estimatedHeight || 300
+        currentLeftHeight += height + rowGap
+      })
+      
+      this.data.rightList.forEach((item: any) => {
+        const imageKey = item._imageKey || `${item.id}`
+        const height = itemHeights[imageKey] || item._estimatedHeight || 300
+        currentRightHeight += height + rowGap
+      })
+
+      // 重新分配布局
       const leftList: any[] = []
       const rightList: any[] = []
       let leftHeight = 0
@@ -159,8 +206,6 @@ export const waterfallBehavior = Behavior({
         }
 
         // 根据当前列高度决定放入哪一列
-        // rowGap 是组件的 property，需要通过 this.properties 访问
-        const rowGap = (this.properties as any).rowGap || 20
         if (leftHeight <= rightHeight) {
           leftList.push(itemWithHeight)
           leftHeight += actualHeight + rowGap
@@ -170,13 +215,25 @@ export const waterfallBehavior = Behavior({
         }
       })
 
-      this.setData({
-        leftList,
-        rightList,
-        leftHeight,
-        rightHeight,
-        isMeasuring: false
-      })
+      // 只有当布局确实需要改变时才更新（避免不必要的重渲染）
+      const heightDiff = Math.abs(currentLeftHeight - currentRightHeight)
+      const newHeightDiff = Math.abs(leftHeight - rightHeight)
+      
+      // 如果新布局的平衡性明显更好（高度差减少超过 50px），或者当前布局不平衡（高度差超过 100px），则更新
+      if (newHeightDiff < heightDiff - 50 || heightDiff > 100) {
+        this.setData({
+          leftList,
+          rightList,
+          leftHeight,
+          rightHeight,
+          isMeasuring: false
+        })
+      } else {
+        // 即使不重新分配，也标记测量完成
+        this.setData({
+          isMeasuring: false
+        })
+      }
     },
 
     /**
@@ -206,6 +263,11 @@ export const waterfallBehavior = Behavior({
      * 重置瀑布流数据
      */
     resetWaterfall() {
+      // 清除防抖定时器
+      if (this.data.redistributeTimer) {
+        clearTimeout(this.data.redistributeTimer)
+      }
+      
       this.setData({
         leftList: [],
         rightList: [],
@@ -213,7 +275,8 @@ export const waterfallBehavior = Behavior({
         rightHeight: 0,
         loadedImages: {},
         itemHeights: {},
-        isMeasuring: false
+        isMeasuring: false,
+        redistributeTimer: null
       })
     }
   }
